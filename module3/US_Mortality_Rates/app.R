@@ -1,5 +1,6 @@
 library(shiny)
 library(plotly)
+library(tidyverse)
 df <- read.csv(file = "https://raw.githubusercontent.com/charleyferrari/CUNY_DATA608/master/lecture3/data/cleaned-cdc-mortality-1999-2010-2.csv")
 
 
@@ -19,6 +20,7 @@ ui <- fluidPage(
                              "from one cause (for example, Neoplasms, which are effectively cancers). ",
                               "Create a visualization that allows you to rank States by crude mortality for each cause of death."
                               )),
+                  tags$br(),
                   selectInput("reason", "Cause of Death:",
                               choices = (unique(subset(df, Year == 2010)$ICD.Chapter)), 
                               selected = NULL, 
@@ -59,6 +61,7 @@ tabPanel("Change in Mortality Rates", fluid = TRUE,
                       "for one cause of death at the time.",
                       "Keep in mind that the national average should be weighted by the national population. "
              )),
+             tags$br(),
              selectInput("reason2", "Cause of Death:",
                          choices = (unique(subset(df, Year == 2010)$ICD.Chapter)), 
                          selected = NULL, 

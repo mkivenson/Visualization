@@ -5,8 +5,8 @@ account: mkivenson
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 1324379
-bundleId: 2497718
+bundleId: 2497727
 url: https://mkivenson.shinyapps.io/US_Mortality_Rates/
-when: 1571024388.76859
+when: 1571024943.75499
 asMultiple: FALSE
 asStatic: FALSE
