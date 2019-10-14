@@ -148,19 +148,28 @@ server <- function(input, output) {
     p <- plot_ly(subset(df_nat_avg, ICD.Chapter == input$reason2 & (State == input$state | State == 'National')), 
                  x = ~Year, y = ~Crude.Rate, split = ~State, type = 'scatter', mode = 'lines+markers') %>%
       layout(
-        title = 'Mortality Rates Over Time, by State and Cause of Death'
+        title = 'Mortality Rates Over Time'
       )
     p
   })
   
   
   output$q2b <- renderTable({
-    max_year = max(unique(subset(df_nat_avg, ICD.Chapter == input$reason2 & State == input$state)$Year))
-    min_year = min(unique(subset(df_nat_avg, ICD.Chapter == input$reason2 & State == input$state)$Year))
-    state_max = subset(df_nat_avg, ICD.Chapter == input$reason2 & State == input$state & Year == max_year)$Crude.Rate
-    state_min = subset(df_nat_avg, ICD.Chapter == input$reason2 & State == input$state & Year == min_year)$Crude.Rate
-    nat_max = subset(df_nat_avg, ICD.Chapter == input$reason2 & State == 'National' & Year == max_year)$Crude.Rate
-    nat_min = subset(df_nat_avg, ICD.Chapter == input$reason2 & State == 'National' & Year == min_year)$Crude.Rate
+    df_temp <- df %>% group_by(Year, ICD.Chapter) %>% 
+      summarise(Crude.Rate = (sum(Deaths)/sum(Population)) * 100000) %>% 
+      mutate(State = 'National') %>% 
+      mutate_if(is.factor, as.character)
+    df_nat_avg <- df %>% 
+      select(c("Year", "ICD.Chapter", "Crude.Rate", "State")) %>% 
+      mutate_if(is.factor, as.character) %>% 
+      bind_rows(df_temp)
+    df_sub <- unique(subset(df_nat_avg, ICD.Chapter == input$reason2 & State == input$state))
+    max_year = max(df_sub$Year)
+    min_year = min(df_sub$Year)
+    state_max = subset(df_nat_avg, ICD.Chapter == input$reason2 & State == input$state & Year == max_year)$Crude.Rate[1]
+    state_min = subset(df_nat_avg, ICD.Chapter == input$reason2 & State == input$state & Year == min_year)$Crude.Rate[1]
+    nat_max = subset(df_nat_avg, ICD.Chapter == input$reason2 & State == 'National' & Year == max_year)$Crude.Rate[1]
+    nat_min = subset(df_nat_avg, ICD.Chapter == input$reason2 & State == 'National' & Year == min_year)$Crude.Rate[1]
     
     
     change_state = (state_max - state_min)/(max_year - min_year)
@@ -168,11 +177,11 @@ server <- function(input, output) {
     
     p1 <- round(change_state, 3)
     p2 <- round(change_nat, 3)
-    
-    x <- data.frame(p1,p2)
-    colnames(x) = c(paste("The rate of change of", input$state, "mortality rate between",min_year,"and",max_year), 
-                                paste("The rate of change of national mortality rate between",min_year,"and",max_year))
-    x
+    v1 <- paste("Rate of change of", input$state, "mortality rate between",min_year,"and",max_year)
+    v2 <- paste("Rate of change of national mortality rate between",min_year,"and",max_year)
+    change_table <- data.frame(p1,p2)
+    colnames(change_table) = c(v1, v2)
+    return(change_table)
     
   })
 }
