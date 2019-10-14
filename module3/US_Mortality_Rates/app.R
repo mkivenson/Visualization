@@ -177,8 +177,8 @@ server <- function(input, output) {
     
     p1 <- round(change_state, 3)
     p2 <- round(change_nat, 3)
-    v1 <- paste("Rate of change of", input$state, "mortality rate between",min_year,"and",max_year)
-    v2 <- paste("Rate of change of national mortality rate between",min_year,"and",max_year)
+    v1 <- paste("Rate of change of", input$state, "mortality rate from",min_year,"to",max_year)
+    v2 <- paste("Rate of change of national mortality rate from",min_year,"to",max_year)
     change_table <- data.frame(p1,p2)
     colnames(change_table) = c(v1, v2)
     return(change_table)
