@@ -98,9 +98,9 @@ tab1 = dcc.Tab(
                                          """),
                                   dcc.Slider(id='records',
                                                 min=10000,
-                                                max=650000,
-                                                marks = {i: str(int(i/1000))+'k' for i in range(50000,700000,50000)},
-                                                step=50000,
+                                                max=200000,
+                                                marks = {i: str(int(i/1000))+'k' for i in range(10000,200000,10000)},
+                                                step=10000,
                                                 value=10000
 )  
                                          ])
