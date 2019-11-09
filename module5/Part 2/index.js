@@ -1,5 +1,5 @@
 const table_output = document.querySelector("tbody")
-const pres_input = document.querySelector("#pres_input").value;
+
 const submit_button_pres = document.querySelector("#pres_button");
 const pres_output = document.querySelector("h4");
 
@@ -18,10 +18,6 @@ function process_row(data) { // for each row
     table_output.innerHTML = table_output.innerHTML + row
 }
 
-const d = {
-    hello: 'world',
-    drink: 'juice'
-};
 
 d3.csv(
     "https://raw.githubusercontent.com/mkivenson/Visualization/master/module5/data/presidents.csv", 
@@ -34,6 +30,16 @@ function getheight(pres) {
 }
 
 submit_button_pres.onclick = function(){
-    console.log([pres_list][0][pres_input])
+    let has_found = 0
+        for (const n of pres_list){
+            if (n['Name'] == document.querySelector("#pres_input").value){
+                has_found = 1
+                pres_output.innerText = `Height: ${n['Height']}  Weight: ${n['Weight']}`
+                console.log('here', pres_input, n['Name']);
+            }
+        }
+    if (has_found == 0){
+        pres_output.innerText = `Not a valid selection!!!`
+    }
     /*output_rev.innerText = reverseString(input_field_rev.value)*/
 };
