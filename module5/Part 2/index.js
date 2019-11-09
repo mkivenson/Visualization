@@ -24,11 +24,6 @@ d3.csv(
     process_row
 );
 
-
-function getheight(pres) {
-    // return data["Height"][pres]
-}
-
 submit_button_pres.onclick = function(){
     let has_found = 0
         for (const n of pres_list){
@@ -41,5 +36,4 @@ submit_button_pres.onclick = function(){
     if (has_found == 0){
         pres_output.innerText = `Not a valid selection!!!`
     }
-    /*output_rev.innerText = reverseString(input_field_rev.value)*/
 };
