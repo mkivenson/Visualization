@@ -33,10 +33,10 @@ function rowMatch(a, m) {
 
 docReady(() => {
   const main_graph = document.querySelector('#main_graph');
-  const graph_naturalgas = document.querySelector('#graph_naturalgas');
-  const graph_petroleum = document.querySelector('#graph_petroleum');
-  const graph_electricity = document.querySelector('#graph_electricity');
-  const graph_coal = document.querySelector('#graph_coal');
+  // const graph_naturalgas = document.querySelector('#graph_naturalgas');
+  // const graph_petroleum = document.querySelector('#graph_petroleum');
+  // const graph_electricity = document.querySelector('#graph_electricity');
+  // const graph_coal = document.querySelector('#graph_coal');
   const myDataFile = 'https://raw.githubusercontent.com/mkivenson/Visualization/master/Final%20Project/Datasets/State%20Energy%20Data%20System%201960-2009/preprocessed.csv';
   var filters = {
     'Year': '1970',
@@ -48,6 +48,8 @@ docReady(() => {
 
   var slider = document.getElementById("myRange");
   const year_output = document.querySelector('#year_output');
+  const year_output2 = document.querySelector('#year_output2');
+
   const type_output = document.querySelector('#type_filt');
   const sector_output = document.querySelector('#sector_filt');
   const screenHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
@@ -79,7 +81,6 @@ docReady(() => {
   )
         .setPin(contain)
         .on("progress", function (e) {
-          console.log('start')
           var scroll_year = 1960 + Math.round((49 * e.progress), 0)
           year_output.innerHTML = scroll_year;
           filters = {
@@ -87,7 +88,6 @@ docReady(() => {
             'Year': scroll_year.toString(),
           };
           var filtered_data = chart_filter(chart_data, filters)
-          console.log('end')
           chart_plot(filtered_data, main_graph, 'Total Energy Consumption by State')
           //chart_subplots(chart_data, filters)
           
@@ -95,7 +95,7 @@ docReady(() => {
         
         .addTo(controller)
         .addIndicators();
-        
+  
   let chart_data = []
   Plotly.d3.csv(
     myDataFile,
@@ -110,9 +110,9 @@ docReady(() => {
       // year_output.innerHTML = slider.value
 
       // // type_filter
-      // Array.from(new Set(unpack(inputData, 'Energy Type')))
-      // .map((t) => createElementFromHTML(`<option value="${t}">${t}</option>`))
-      // .forEach( (e) => type_output.appendChild(e))
+      Array.from(new Set(unpack(inputData, 'Energy Type')))
+      .map((t) => createElementFromHTML(`<option value="${t}">${t}</option>`))
+      .forEach( (e) => type_output.appendChild(e))
 
       // sector_filter
       Array.from(new Set(unpack(inputData, 'Sector')))
@@ -123,7 +123,7 @@ docReady(() => {
       // generate plot
       var filtered_data = chart_filter(chart_data, filters)
       chart_plot(filtered_data, main_graph, 'Total Energy Consumption by State')
-      chart_subplots(chart_data, filters)
+      // chart_subplots(chart_data, filters)
     }
   );
 
@@ -139,15 +139,15 @@ docReady(() => {
   //   chart_subplots(chart_data, filters)
   // } 
 
-  // type_output.onchange = function() {
+  type_output.onchange = function() {
     
-  //   filters = {
-  //     ...filters,
-  //     'Energy Type': type_output.options[type_output.selectedIndex].value,
-  //   };
-  //   var filtered_data = chart_filter(chart_data, filters)
-  //   chart_plot(filtered_data, main_graph, 'Total Energy Consumption by State')
-  // } 
+    filters = {
+      ...filters,
+      'Energy Type': type_output.options[type_output.selectedIndex].value,
+    };
+    var filtered_data = chart_filter(chart_data, filters)
+    chart_plot(filtered_data, main_graph, 'Total Energy Consumption by State')
+  } 
 
   sector_output.onchange = function() {
     filters = {
@@ -214,39 +214,39 @@ function chart_plot (inputData, location, title) {
   Plotly.react(location, data, layout, {showLink: false, responsive: false});
 }
 
-function chart_subplots(chart_data, filter){
-  /*coal data and chart*/
-  var filters_coal = {
-    ...filter,
-    'Energy Type': 'Coal'
-  }
-  var coal_data = chart_filter(chart_data, filters_coal)
-  chart_plot(coal_data, graph_coal, 'Coal Consumption by State')
+// function chart_subplots(chart_data, filter){
+//   /*coal data and chart*/
+//   var filters_coal = {
+//     ...filter,
+//     'Energy Type': 'Coal'
+//   }
+//   var coal_data = chart_filter(chart_data, filters_coal)
+//   chart_plot(coal_data, graph_coal, 'Coal Consumption by State')
 
-  /*electricity data and chart*/
-  var filters_electricity = {
-    ...filter,
-    'Energy Type': 'Electricity'
-  }
-  var elec_data = chart_filter(chart_data, filters_electricity)
-  chart_plot(elec_data, graph_electricity, 'Electricity Consumption by State')
+//   /*electricity data and chart*/
+//   var filters_electricity = {
+//     ...filter,
+//     'Energy Type': 'Electricity'
+//   }
+//   var elec_data = chart_filter(chart_data, filters_electricity)
+//   chart_plot(elec_data, graph_electricity, 'Electricity Consumption by State')
 
-  /*natural gas data and chart*/
-  var filters_naturalgas =  {
-    ...filter,
-    'Energy Type': 'Natural gas'
-  }
-  var natgas_data = chart_filter(chart_data, filters_naturalgas)
-  chart_plot(natgas_data, graph_naturalgas, 'Natural Gas Consumption by State')
+//   /*natural gas data and chart*/
+//   var filters_naturalgas =  {
+//     ...filter,
+//     'Energy Type': 'Natural gas'
+//   }
+//   var natgas_data = chart_filter(chart_data, filters_naturalgas)
+//   chart_plot(natgas_data, graph_naturalgas, 'Natural Gas Consumption by State')
 
-  /*petroleum data and chart*/
-  var filters_petroleum = {
-    ...filter,
-    'Energy Type': 'All petroleum products'
-  }
-  var petroleum_data = chart_filter(chart_data, filters_petroleum)
-  chart_plot(petroleum_data, graph_petroleum, 'Petroleum Consumption by State')
-}
+//   /*petroleum data and chart*/
+//   var filters_petroleum = {
+//     ...filter,
+//     'Energy Type': 'All petroleum products'
+//   }
+//   var petroleum_data = chart_filter(chart_data, filters_petroleum)
+//   chart_plot(petroleum_data, graph_petroleum, 'Petroleum Consumption by State')
+// }
 
 
 
